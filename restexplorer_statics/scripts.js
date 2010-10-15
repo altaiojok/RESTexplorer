@@ -28,7 +28,20 @@ function buildList(nodes, parent) {
 		var li = document.createElement("li");
 		
 		if (nodes[key] instanceof Object) {
-			var keyLabel = (isInt(key) ? ("Item " + (parseInt(key) + 1)) : key);
+			var keyLabel = (isInt(key) ? ("[Item " + (parseInt(key) + 1) + "]") : key);
+			var commonLabels = new Array("name",
+			                             "Name", 
+			                             "relationshipName", 
+			                             "value",
+			                             "label",
+			                             "Id", 
+			                             "errorCode");
+			for (var i in commonLabels) {
+				if (nodes[key][commonLabels[i]]) {
+					keyLabel = nodes[key][commonLabels[i]];
+					break;
+				}
+			}
 		
 			li.innerHTML = "<strong>" + keyLabel + "</strong>";
 			li.appendChild(buildList(nodes[key], document.createElement("ul")));
