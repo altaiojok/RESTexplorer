@@ -1,82 +1,13 @@
 <apex:page controller="RestExplorerController">   
-    <apex:includeScript value="{!URLFOR($Resource.simpletreemenu, 'simpletreemenu.js')}"/>
+  <link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.simpletreemenu, 'simpletree.css')}"/>
+  <link rel="stylesheet" type="text/css" href="{!$Resource.restexplorer_styles}"/>
+  <apex:includeScript value="{!$Resource.restexplorer_scripts}"/>
+  <script type="text/javascript">
+      ddtreemenu.closefolder = "{!URLFOR($Resource.simpletreemenu, 'closed.gif')}";
+      ddtreemenu.openfolder = "{!URLFOR($Resource.simpletreemenu, 'open.gif')}";
+  </script>
+  <apex:includeScript value="{!URLFOR($Resource.simpletreemenu, 'simpletreemenu.js')}"/>
     
-    <link rel="stylesheet" type="text/css" href="{!URLFOR($Resource.simpletreemenu, 'simpletree.css')}"/>
-    <style>
-        .results, .results * {
-            font-size: small;
-            //line-height: 150%;
-        }
-        
-        .miniLink {
-            font-size: x-small;
-            color: #888;
-            text-decoration: none;
-            font-weight: normal;
-        }
-    </style>
-
-    <script>
-        ddtreemenu.closefolder = "{!URLFOR($Resource.simpletreemenu, 'closed.gif')}";
-        ddtreemenu.openfolder = "{!URLFOR($Resource.simpletreemenu, 'open.gif')}";
-        
-         function checkEnter(e) { //e is event object passed from function invocation
-             var characterCode; //literal character code will be stored in this variable
-             
-             if (e && e.which) { //if which property of event object is supported (NN4)
-                 characterCode = e.which; //character code is contained in NN4's which property
-             } else {
-                 characterCode = event.keyCode; //character code is contained in IE's keyCode property
-             }
-             
-             if (characterCode == 13) { //if generated character code is equal to ascii 13 (if enter key)
-                 return true;
-             } else {
-                 return false;
-             }
-             
-         }
-    
-        function isInt(value){
-          if((parseFloat(value) == parseInt(value)) && !isNaN(parseInt(value))){
-              return true;
-         } else {
-              return false;
-         }
-        }
-    
-        function buildList(nodes, parent) {
-            for (var key in nodes) {
-                var li = document.createElement("li");
-                
-                if (nodes[key] instanceof Object) {
-                    var keyLabel = (isInt(key) ? ("Item " + (parseInt(key) + 1)) : key);
-                
-                    li.innerHTML = "<strong>" + keyLabel + "</strong>";
-                    li.appendChild(buildList(nodes[key], document.createElement("ul")));
-                } else {
-                    li.innerHTML = "<strong>" + key + ": </strong>";
-                    li.innerHTML += nodes[key];
-                }
-            
-                parent.appendChild(li);
-            }
-            
-            return parent;
-        }
-        
-        function convert(jsonData) {
-            var responseListContainer = document.getElementById('responseListContainer');
-            responseListContainer.innerHTML = null;
-            var responseList= document.createElement('ul');
-            responseList.id = 'responseList';
-            responseList.className = 'treeview';
-            responseListContainer.appendChild(buildList(jsonData, responseList));
-            ddtreemenu.createTree('responseList', false);
-            ddtreemenu.flatten('responseList', 'contract');
-        }
-    </script>
-  
   <apex:pageMessages />
     
   <apex:form >
@@ -86,6 +17,7 @@
                       style="width: 40em; height: 1.5em; font-size: 20px; font-weight: bold;" 
                       onKeyPress="if (checkEnter(event)) {document.getElementById('{!$Component.execBtn}').click(); return false;}"/>
       &nbsp;
+      
       <apex:commandButton id="execBtn" 
                           action="{!execute}" 
                           value="Execute" 
@@ -105,16 +37,15 @@
                           
       <apex:outputPanel id="responsePanel">
           <apex:outputPanel rendered="{!NOT(ISBLANK(response))}">
-              <p>
-              Click the bulleted list below for details:
-              </p>
+              <p/>
               <a href="javascript:ddtreemenu.flatten('responseList', 'expand')">Expand All</a> | <a href="javascript:ddtreemenu.flatten('responseList', 'contact')">Contract All</a>
               <div id="responseListContainer" class="results"></div>
           </apex:outputPanel>
       </apex:outputPanel>
+      
   </apex:form>
   
-  <script type='text/javascript'>
+  <script type="text/javascript">
       if ({!$CurrentPage.parameters.autoExec} == 1) {
           convert({!response});
       }
