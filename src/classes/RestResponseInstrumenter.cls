@@ -19,24 +19,20 @@ public class RestResponseInstrumenter {
     private final List<Insturmentation> insturmentations = new List<Insturmentation>();
     
     public RestResponseInstrumenter(String baseUrl) {
-        // strip existing URL param from url to form base url
-        baseUrl = new Insturmentation(Pattern.compile('[?]url=[^&]*[&]'),'?').instrument(baseUrl); // url is first and followed by other params
-        baseUrl = new Insturmentation(Pattern.compile('[?&]url=[^&]*'),'').instrument(baseUrl);    // url is second or first and not followed 
-        baseUrl += baseUrl.contains('?') ? '&' : '?'; 
+        // strip existing url or autoExec param from url to form base url
+        baseUrl = new Insturmentation(Pattern.compile('[?](autoExec|url)=[^&]*[&]'),'?').instrument(baseUrl);
+        baseUrl = new Insturmentation(Pattern.compile('[?&](autoExec|url)=[^&]*'),'').instrument(baseUrl);
+        baseUrl += baseUrl.contains('?') ? '&' : '?';
         
         final String restBasePattern = '/services/data/v\\d+\\.\\d';
             
-        // any rest url
+        // add link url to any rest url
         insturmentations.add(new Insturmentation(Pattern.compile('\"(' + restBasePattern + '.*)\"'),
-                                                                 '\"<a href=' + baseUrl + 'url=$1>$1</a>\"'));
-                       
-        // sobject url                                                         
-        insturmentations.add(new Insturmentation(Pattern.compile('>(' + restBasePattern + '/sobject.*)'),
-                                                                 '&autoExec=1>$1'));                                                         
-      
-        // recent url                                                         
-        insturmentations.add(new Insturmentation(Pattern.compile('>(' + restBasePattern + '/recent.*)'),
-                                                                 '&autoExec=1>$1'));  
+                                                                 '\"<a href=' + baseUrl + 'url=$1&autoExec=0>$1</a>\"'));
+
+        // add autoExec to everything but query and search
+        insturmentations.add(new Insturmentation(Pattern.compile('(url=' + restBasePattern + '(?!/query|/search).*&)autoExec=0'),
+                                                                 '$1autoExec=1'));
 
         // query url                                                         
         insturmentations.add(new Insturmentation(Pattern.compile('(' + restBasePattern + '/query)<'),
