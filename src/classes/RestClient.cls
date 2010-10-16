@@ -1,4 +1,4 @@
-public with sharing class RestClient {
+public virtual class RestClient {
         
     private ConnectorConfig config;
     
@@ -7,7 +7,7 @@ public with sharing class RestClient {
     }
     
     public String get(String url) {
-        return http(RequestMethods.GET.name(), url, '');
+        return http(RequestMethods.GET.name(), url, null);
     }
     
     public String post(String url, String body) {
@@ -29,7 +29,10 @@ public with sharing class RestClient {
             req.setBody(body);
         }
         req.setMethod(method);
-        return new Http().send(req).getBody(); 
+        return send(req).getBody(); 
     }
     
+    virtual HttpResponse send(HttpRequest req) {
+        return new Http().send(req);
+    }   
 }

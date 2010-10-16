@@ -23,14 +23,37 @@ function isInt(value){
  }
 }
 
+function getKeyLabel(key, nodes) {	
+	if (!isInt(key)) {
+		return key;
+	}
+	
+	// the following is a list of common values
+	// in nodes, which can be used as the label
+	// for the key label, if one is missing (i.e. isInt)
+	var commonLabels = new Array("name",
+								 "Name", 
+								 "relationshipName", 
+								 "value",
+								 "label",
+								 "Id", 
+								 "errorCode");
+								 
+	for (var i in commonLabels) {
+		if (nodes[key][commonLabels[i]]) {
+			return nodes[key][commonLabels[i]];
+		}
+	}
+	
+	return "[Item " + (parseInt(key) + 1) + "]";
+}
+
 function buildList(nodes, parent) {
 	for (var key in nodes) {
 		var li = document.createElement("li");
 		
-		if (nodes[key] instanceof Object) {
-			var keyLabel = (isInt(key) ? ("Item " + (parseInt(key) + 1)) : key);
-		
-			li.innerHTML = "<strong>" + keyLabel + "</strong>";
+		if (nodes[key] instanceof Object) {		
+			li.innerHTML = "<strong>" + getKeyLabel(key, nodes) + "</strong>";
 			li.appendChild(buildList(nodes[key], document.createElement("ul")));
 		} else {
 			li.innerHTML = "<strong>" + key + ": </strong>";

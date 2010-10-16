@@ -8,7 +8,10 @@
         <members>RestClient</members>
         <members>RestClientTest</members>
         <members>RestExplorerController</members>
+        <members>RestExplorerControllerTest</members>
         <members>RestProxyController</members>
+        <members>RestResponseInstrumenter</members>
+        <members>RestResponseInstrumenterTest</members>
         <name>ApexClass</name>
     </types>
     <types>
