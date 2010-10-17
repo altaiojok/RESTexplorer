@@ -20,12 +20,13 @@ public class RestExplorerController {
             url = '/services/data';
         }
         
-        if (ApexPages.currentPage().getParameters().get('autoExec') != null) {
+        if (ApexPages.currentPage().getParameters().get('autoExec') == '1') {
             execute();
         }
     }
 
     public void execute() {
+        ApexPages.currentPage().getParameters().put('autoExec',null);
         rawResponse = client.get(url);
         response = insturmenter.instrument(rawResponse);
     }

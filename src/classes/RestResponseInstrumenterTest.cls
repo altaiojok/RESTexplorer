@@ -7,9 +7,9 @@ private class RestResponseInstrumenterTest {
         System.assertEquals(instResponse, new RestResponseInstrumenter('').instrument(rawResponse));
     }
 
-    static testmethod void testRowTemplatesDoNotInsturment() {
+    static testmethod void testRowTemplatesDoNotAutoExecute() {
         String rawResponse = 'ABC\"/services/data/v20.0/sobjects/Account/{ID}"XYZ';
-        String instResponse = rawResponse;
+        String instResponse = 'ABC\"<a href=?url=/services/data/v20.0/sobjects/Account/{ID}&autoExec=0>/services/data/v20.0/sobjects/Account/{ID}</a>\"XYZ';
         System.assertEquals(instResponse, new RestResponseInstrumenter('').instrument(rawResponse));
     }
 

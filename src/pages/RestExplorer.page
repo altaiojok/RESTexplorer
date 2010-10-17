@@ -36,9 +36,18 @@
       </apex:actionStatus>
                           
       <apex:outputPanel id="responsePanel">
+          <apex:outputPanel rendered="{!$CurrentPage.parameters.autoExec == '0'}">
+              <p/>
+              <apex:pageMessage severity="WARNING" 
+                  strength="2" 
+                  summary="<strong>This URI needs to be completed before executing</strong>"
+                  detail="For example, it may need a merge field populated (e.g. {ID}) or a query string appended (e.g. ?q=)"
+                  escape="false"/>
+          </apex:outputPanel>
+          
           <apex:outputPanel rendered="{!NOT(ISBLANK(response))}">
               <p/>
-              <a href="javascript:ddtreemenu.flatten('responseList', 'expand')">Expand All</a> | <a href="javascript:ddtreemenu.flatten('responseList', 'contact')">Contract All</a>
+              <a href="javascript:ddtreemenu.flatten('responseList', 'expand')">Expand All</a> | <a href="javascript:ddtreemenu.flatten('responseList', 'contact')">Collapse All</a>
               <div id="responseListContainer" class="results"></div>
           </apex:outputPanel>
       </apex:outputPanel>
@@ -46,7 +55,7 @@
   </apex:form>
   
   <script type="text/javascript">
-      if ({!$CurrentPage.parameters.autoExec} == 1) {
+      if ({!NOT(ISBLANK(response))}) {
           convert({!response});
       }
   </script>
