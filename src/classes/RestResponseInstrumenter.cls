@@ -27,7 +27,7 @@ public class RestResponseInstrumenter {
         final String restBasePattern = '/services/data/v\\d+\\.\\d';
             
         // add link url to any rest url
-        insturmentations.add(new Insturmentation(Pattern.compile('\"(' + restBasePattern + '.*)\"'),
+        insturmentations.add(new Insturmentation(Pattern.compile('\"(' + restBasePattern + '(?!.*/.*\\{ID\\}).*)\"'),
                                                                  '\"<a href=' + baseUrl + 'url=$1&autoExec=0>$1</a>\"'));
 
         // add autoExec to everything but query and search

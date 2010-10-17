@@ -7,6 +7,12 @@ private class RestResponseInstrumenterTest {
         System.assertEquals(instResponse, new RestResponseInstrumenter('').instrument(rawResponse));
     }
 
+    static testmethod void testRowTemplatesDoNotInsturment() {
+        String rawResponse = 'ABC\"/services/data/v20.0/sobjects/Account/{ID}"XYZ';
+        String instResponse = rawResponse;
+        System.assertEquals(instResponse, new RestResponseInstrumenter('').instrument(rawResponse));
+    }
+
     static testmethod void testUrlInsturmentionWithSimpleBaseUrl() {
         String baseUrl = 'http://www.example.com';
         String rawResponse = 'ABC\"/services/data/v20.0/sobjects\"XYZ';
