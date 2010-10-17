@@ -7,8 +7,7 @@ public class RestExplorerController {
     private RestResponseInstrumenter insturmenter;
     
     public RestExplorerController() {        
-        //prime the REST client
-        final String staticBaseUrl = 'https://tapp0.salesforce.com'; //TODO: inject hostname in from VisualForce or custom setting
+        final String staticBaseUrl = RestExplorerConfig__c.getInstance('baseUrl').value__c;
         final String sessionId = UserInfo.getSessionId();
         ConnectorConfig config = new ConnectorConfig(staticBaseUrl, sessionId);
         client = new RestClient(config);

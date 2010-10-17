@@ -23,8 +23,16 @@
         <name>CustomApplication</name>
     </types>
     <types>
+        <members>*</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
         <members>RESTexplorer</members>
         <name>CustomTab</name>
+    </types>
+    <types>
+        <members>loopback</members>
+        <name>RemoteSiteSetting</name>
     </types>
     <types>
         <members>*</members>
