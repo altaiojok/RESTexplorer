@@ -29,4 +29,12 @@ private class RestExplorerControllerTest {
         
         System.assertEquals(customUrl, c.url);
     }
+
+    static testmethod void testGetAvailableRequestMethodsl() {
+        Test.setCurrentPage(Page.RestExplorer);
+
+        RestExplorerController c = new RestExplorerController();
+        
+        System.assert(null != c.getAvailableRequestMethods());
+    }
 }

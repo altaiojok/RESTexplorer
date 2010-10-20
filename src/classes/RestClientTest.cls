@@ -28,33 +28,32 @@ private class RestClientTest {
     static testmethod void testGet() { 
         RestClientSpy spy = new RestClientSpy();
         
-        spy.get('/services/data');
+        spy.send(RequestMethods.GET.name(), '/services/data', null);
         
         System.assertEquals(1, spy.getSendCount());
         System.assertEquals(null, spy.getHttpRequest().getBody()); 
         System.assertEquals('GET', spy.getHttpRequest().getMethod()); 
     }
+
+    static testmethod void testGetWithBodyThrowsRestException() { 
+        RestClientSpy spy = new RestClientSpy();
         
+        try {
+            spy.send(RequestMethods.GET.name(), '/services/data', 'A BODY');
+            System.assert(false);
+        } catch (RestException e) {
+            // expected
+        }
+    }
+            
     static testmethod void testPost() { 
         RestClientSpy spy = new RestClientSpy();
         
         final String expectedBody = 'xxx';
-        spy.post('/services/data', expectedBody);
+        spy.send(RequestMethods.POST.name(), '/services/data', expectedBody);
         
         System.assertEquals(1, spy.getSendCount());
         System.assertEquals(expectedBody, spy.getHttpRequest().getBody()); 
         System.assertEquals('POST', spy.getHttpRequest().getMethod()); 
-    }
-    
-        
-    static testmethod void testPatch() { 
-        RestClientSpy spy = new RestClientSpy();
-        
-        final String expectedBody = 'xxx';
-        spy.patch('/services/data', expectedBody);
-        
-        System.assertEquals(1, spy.getSendCount());
-        System.assertEquals(expectedBody, spy.getHttpRequest().getBody()); 
-        System.assertEquals('PATCH', spy.getHttpRequest().getMethod()); 
     }
 }

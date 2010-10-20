@@ -68,11 +68,19 @@ function buildList(nodes, parent) {
 
 function convert(jsonData) {
 	var responseListContainer = document.getElementById('responseListContainer');
-	responseListContainer.innerHTML = null;
+	responseListContainer.innerHTML = "";
 	var responseList= document.createElement('ul');
 	responseList.id = 'responseList';
 	responseList.className = 'treeview';
 	responseListContainer.appendChild(buildList(jsonData, responseList));
 	ddtreemenu.createTree('responseList', false);
 	ddtreemenu.flatten('responseList', 'contract');
+}
+
+function toggleRequestBodyDisplay(radio) {
+  if (radio.checked && (radio.value == 'POST' || radio.value == 'PATCH')) {
+	  document.getElementById('requestBodyContainer').style.display = 'inline';
+  } else {
+	  document.getElementById('requestBodyContainer').style.display = 'none';
+  }
 }

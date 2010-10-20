@@ -7,6 +7,7 @@
         <members>RequestMethods</members>
         <members>RestClient</members>
         <members>RestClientTest</members>
+        <members>RestException</members>
         <members>RestExplorerController</members>
         <members>RestExplorerControllerTest</members>
         <members>RestProxyController</members>

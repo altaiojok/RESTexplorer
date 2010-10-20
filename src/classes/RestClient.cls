@@ -6,30 +6,21 @@ public virtual class RestClient {
         this.config = config;
     }
     
-    public String get(String url) {
-        return http(RequestMethods.GET.name(), url, null);
-    }
-    
-    public String post(String url, String body) {
-        return http(RequestMethods.POST.name(), url, body);
-    }
-    
-    public String patch(String url, String body) {
-        return http(RequestMethods.PATCH.name(), url, body);
-    }
-    
-    private String http(String method, String url, String body) {
+    public HttpResponse send(String method, String url, String body) {
         HttpRequest req = new HttpRequest(); 
         req.setEndpoint(config.getBaseUrl() + url);
         req.setHeader('Authorization', 'OAuth ' + config.getSessionId()); 
         req.setHeader('X-PrettyPrint', 'true'); 
         
-        //set the body only if it's a POST or PATCH; never for get
-        if(method.equals(RequestMethods.POST.name()) || method.equals(RequestMethods.PATCH.name())) {
+        if (method.equals(RequestMethods.POST.name())) {
+            req.setHeader('Content-Type', 'application/json');
             req.setBody(body);
+        } else if (body != null) {
+            throw new RestException('Request body should be null for ' + method);
         }
+        
         req.setMethod(method);
-        return send(req).getBody(); 
+        return send(req); 
     }
     
     virtual HttpResponse send(HttpRequest req) {
