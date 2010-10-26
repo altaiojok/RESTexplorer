@@ -90,4 +90,14 @@ private class RestResponseInstrumenterTest {
         String instResponse = 'ABC\"<a class=\'RestLinkable\' href=?url=/services/data/v20.0/search&autoExec=0>/services/data/v20.0/search</a>&nbsp;<a class=\'miniLink RestLinkable\' href=?url=/services/data/v20.0/search?q=FIND%2B%7B' + UserInfo.getLastName() + '%7D%2BIN%2BALL%2BFIELDS&autoExec=1>SAMPLE</a>\"XYZ';
         System.assertEquals(instResponse, new RestResponseInstrumenter('').instrument(rawResponse));
     }
+    
+    static testmethod void testSChunk() {
+        String rawResponse = 'Hello, this is a test.';
+        List<String> chunks =  new RestResponseInstrumenter('').chunk(rawResponse, ' ', 4);
+        
+        System.assertEquals('Hello,', chunks.get(0));
+        System.assertEquals(' this', chunks.get(1));
+        System.assertEquals(' is a', chunks.get(2)); // doesn't break between 'is' and 'a' because chunk size of 4
+        System.assertEquals(' test.', chunks.get(3));
+    }
 }

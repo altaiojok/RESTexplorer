@@ -1,5 +1,6 @@
 public class RestResponseInstrumenter {
 
+
     private class Insturmentation {
         private final Pattern pattern;
         private final String replacement; 
@@ -18,7 +19,7 @@ public class RestResponseInstrumenter {
     
     private final List<Insturmentation> insturmentations = new List<Insturmentation>();
     
-    public RestResponseInstrumenter(String baseUrl) {
+    public RestResponseInstrumenter(String baseUrl) {        
         // strip existing url or autoExec param from url to form base url
         baseUrl = new Insturmentation(Pattern.compile('[?](autoExec|url)=[^&]*[&]'),'?').instrument(baseUrl);
         baseUrl = new Insturmentation(Pattern.compile('[?&](autoExec|url)=[^&]*'),'').instrument(baseUrl);
@@ -45,9 +46,27 @@ public class RestResponseInstrumenter {
     }
 
     public String instrument(String s) {
-        for (Insturmentation i : insturmentations) {
-            s = i.instrument(s);
+        String retVal = '';
+        for (String c : chunk(s, '}, {', 100000)){
+            for (Insturmentation i : insturmentations) {
+                c = i.instrument(c);
+            }
+            retVal += c;
         }
-        return s;
+        return retVal;
+    }
+    
+    public List<String> chunk(String s, String delim, Integer chunkSize) {
+        final Integer breakpoint = s.indexOf(delim, chunkSize);
+        
+        final List<String> chunks = new List<String>();   
+        if (breakpoint > -1) {
+            chunks.add(s.substring(0, breakpoint));
+            chunks.addAll(chunk(s.substring(breakpoint), delim, chunkSize));            
+        } else {
+            chunks.add(s);
+        }
+        
+        return chunks;
     }
 }
