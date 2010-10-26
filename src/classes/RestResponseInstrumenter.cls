@@ -28,7 +28,7 @@ public class RestResponseInstrumenter {
             
         // add link url to any rest url
         insturmentations.add(new Insturmentation(Pattern.compile('\"(' + restBasePattern + '.*)\"'),
-                                                                 '\"<a href=' + baseUrl + 'url=$1&autoExec=0>$1</a>\"'));
+                                                                 '\"<a class=\'RestLinkable\' href=' + baseUrl + 'url=$1&autoExec=0>$1</a>\"'));
 
         // add autoExec to everything but query and search
         insturmentations.add(new Insturmentation(Pattern.compile('(url=' + restBasePattern + '(?!/query|/search|.*/.*\\{ID\\}).*&)autoExec=0'),
@@ -36,11 +36,11 @@ public class RestResponseInstrumenter {
 
         // query url                                                         
         insturmentations.add(new Insturmentation(Pattern.compile('(' + restBasePattern + '/query)<'),
-                                                                 '$1</a>&nbsp;<a class=miniLink href=' + baseUrl + 'url=$1?q=SELECT%2Bid,name,profile.name%2BFROM%2Buser%2BWHERE%2BlastName=\'' + UserInfo.getLastName() + '\'&autoExec=1>SAMPLE<'));  
+                                                                 '$1</a>&nbsp;<a class=\'miniLink RestLinkable\' href=' + baseUrl + 'url=$1?q=SELECT%2Bid,name,profile.name%2BFROM%2Buser%2BWHERE%2BlastName=\'' + UserInfo.getLastName() + '\'&autoExec=1>SAMPLE<'));  
 
         // search url                                                         
         insturmentations.add(new Insturmentation(Pattern.compile('(' + restBasePattern + '/search)<'),
-                                                                 '$1</a>&nbsp;<a class=miniLink href=' + baseUrl + 'url=$1?q=FIND%2B%7B' + UserInfo.getLastName() + '%7D%2BIN%2BALL%2BFIELDS&autoExec=1>SAMPLE<'));  
+                                                                 '$1</a>&nbsp;<a class=\'miniLink RestLinkable\' href=' + baseUrl + 'url=$1?q=FIND%2B%7B' + UserInfo.getLastName() + '%7D%2BIN%2BALL%2BFIELDS&autoExec=1>SAMPLE<'));  
 
     }
 

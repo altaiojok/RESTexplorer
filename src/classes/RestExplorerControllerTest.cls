@@ -17,17 +17,25 @@ private class RestExplorerControllerTest {
         RestExplorerController c = new RestExplorerController();
         
         System.assertEquals('/services/data', c.url);
-        System.assert(c.response.contains('version'));
-        System.assert(c.rawResponse.contains('version'));
     }
 
     static testmethod void testCustomUrl() {
         Test.setCurrentPage(Page.RestExplorer);
-        final String customUrl = 'xxx';
+        final String customUrl = '/services/data/blah';
         ApexPages.currentPage().getParameters().put('url', customUrl);
         RestExplorerController c = new RestExplorerController();
         
         System.assertEquals(customUrl, c.url);
+    }
+
+    static testmethod void testBadUrlThrowsException() {
+        Test.setCurrentPage(Page.RestExplorer);
+        RestExplorerController c = new RestExplorerController();
+        final Integer previousMessages = ApexPages.getMessages().size();
+        
+        c.url = 'xxx';
+        c.execute();
+        System.assertEquals(previousMessages + 1, ApexPages.getMessages().size());
     }
 
     static testmethod void testGetAvailableRequestMethodsl() {
@@ -36,5 +44,28 @@ private class RestExplorerControllerTest {
         RestExplorerController c = new RestExplorerController();
         
         System.assert(null != c.getAvailableRequestMethods());
+    }
+
+    static testmethod void testGetIsBaseUrlConfigured_WhenNotConfigured() {        
+        Test.setCurrentPage(Page.RestExplorer);
+        final Integer previousMessages = ApexPages.getMessages().size();
+        
+        DELETE [SELECT Id FROM RestExplorerConfig__c];
+        RestExplorerController c = new RestExplorerController();
+        
+        System.assert(!c.getIsBaseUrlConfigured());
+        System.assertEquals(previousMessages + 1, ApexPages.getMessages().size());
+    }
+
+    static testmethod void testGetIsBaseUrlConfigured_WhenConfigured() {        
+        Test.setCurrentPage(Page.RestExplorer);
+        RestExplorerController c = new RestExplorerController();
+        
+        RestExplorerConfig__c config = new RestExplorerConfig__c(
+                                            name     = 'baseUrl', 
+                                            value__c = 'http://www.example.com');
+        UPSERT config name;
+        
+        System.assert(c.getIsBaseUrlConfigured());
     }
 }

@@ -66,6 +66,11 @@ function buildList(nodes, parent) {
 	return parent;
 }
 
+function displayWaitingNotice() {
+	document.getElementById('waitingNotice').style.display = 'inline';
+   return true;
+}
+
 function convert(jsonData) {
 	var responseListContainer = document.getElementById('responseListContainer');
 	responseListContainer.innerHTML = "";
@@ -75,6 +80,13 @@ function convert(jsonData) {
 	responseListContainer.appendChild(buildList(jsonData, responseList));
 	ddtreemenu.createTree('responseList', false);
 	ddtreemenu.flatten('responseList', 'contract');
+	
+	var links = document.getElementsByTagName("a");
+   for (var i in links) {
+	   if (links[i].className != null && links[i].className.indexOf("RestLinkable") > -1) {
+	       links[i].addEventListener("click", displayWaitingNotice, false);
+	   }
+   }
 }
 
 function toggleRequestBodyDisplay(radio) {

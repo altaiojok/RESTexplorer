@@ -7,10 +7,12 @@ private class RestClientTest {
         private HttpRequest httpRequest;
         
         RestClientSpy() {
-            super(new ConnectorConfig('https://tapp0.salesforce.com', UserInfo.getSessionId()));
+            super(new ConnectorConfig('https://www.example.com', UserInfo.getSessionId()));
         }
         
         public HttpResponse send(HttpRequest httpRequest) {
+            System.assert(null != httpRequest);
+        
             this.sendCount++;
             this.httpRequest = httpRequest;
             return new HttpResponse();

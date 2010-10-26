@@ -16,11 +16,11 @@
   </script>
   <apex:includeScript value="{!URLFOR($Resource.simpletreemenu, 'simpletreemenu.js')}"/>
     
-  <apex:pageMessages />
+  <apex:pageMessages id="errors"/>
     
-  <apex:form >
+  <apex:form rendered="{!isBaseUrlConfigured}">
       <p>
-          <em>Choose an HTTP method and to perform on the REST API service URI below:</em>
+          <em>Choose an HTTP method to perform on the REST API service URI below:</em>
           <apex:selectRadio value="{!requestMethod}" onclick="toggleRequestBodyDisplay(this);">
               <apex:selectOptions value="{!availableRequestMethods}"/>
           </apex:selectRadio>
@@ -33,21 +33,17 @@
       
       <apex:commandButton id="execBtn" 
                           action="{!execute}" 
-                          value="Execute" 
-                          reRender="responsePanel" 
-                          oncomplete="convert({!response});"
-                          style="font-size: 18px;" 
-                          status="waitingImg"/>
+                          value="Execute"                           
+                          style="font-size: 18px;" />
                          
-                          
-      <apex:actionStatus id="waitingImg">
-          <apex:facet name="start">
-              <apex:outputPanel >
-                  &nbsp;<img align="absmiddle" src="{!$Resource.waiting}"/><em> Loading...</em>
-              </apex:outputPanel>
-          </apex:facet>
-      </apex:actionStatus>
-      
+      <div id="waitingNotice" style="display: none;">
+          &nbsp;<img align="absmiddle" src="{!$Resource.waiting}"/><em> Loading...</em>
+      </div>
+
+      <script type="text/javascript">
+            document.getElementById("{!$Component.execBtn}").addEventListener("click", displayWaitingNotice, false);
+      </script>
+    
       <div id="requestBodyContainer" style="display: none;">
           <p><br/><strong>Request Body</strong></p>
           <apex:inputTextarea value="{!requestBody}"
@@ -75,7 +71,7 @@
                   <apex:pageMessage severity="INFO" 
                                     strength="2" 
                                     summary="<strong>HEAD Contains No Body</strong>"
-                                    detail="The HEAD method does not return a body to display. See Raw Request to the right for details."
+                                    detail="The HEAD method does not return a body to display. See Raw Response to the right for details."
                                     escape="false"
                                     rendered="{!requestMethod == 'HEAD'}"/>
               </div>             
@@ -88,7 +84,7 @@
       
   </apex:form>
   
-  <script type="text/javascript">
+  <script type="text/javascript">    
       if ({!NOT(ISBLANK(response))}) {
           convert({!response});
       }

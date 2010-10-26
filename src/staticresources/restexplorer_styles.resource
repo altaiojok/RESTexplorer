@@ -19,5 +19,5 @@
 
 .codeViewPort {
 	white-space: pre-wrap; 
-	font-family: courier; monotype;
+	font-family: courier, monotype;
 }
