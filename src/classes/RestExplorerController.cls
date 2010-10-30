@@ -64,8 +64,12 @@ public class RestExplorerController {
             response = null;
             ApexPages.currentPage().getParameters().put('autoExec',null);
             
+            // clean up the URL
+            url = url.trim().replaceAll(' ', '+');
+            
+            // validate URL
             if (url.indexOf(BASE_REST_URL_PREFIX) != 0) {
-                throw new RestException('Invalid REST URL. Must begin with \'' + BASE_REST_URL_PREFIX + '\'.');
+                throw new RestException('Invalid REST API Service URI. Must begin with \'' + BASE_REST_URL_PREFIX + '\'.');
             }
             
             // send the resonse    
